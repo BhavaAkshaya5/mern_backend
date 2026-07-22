@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Lookup</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .card { max-width: 500px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px; }
+    label { display: block; margin-top: 12px; }
+    input { width: 100%; padding: 8px; margin-top: 4px; }
+    button { margin-top: 16px; padding: 10px 16px; }
+    pre { background: #f6f6f6; padding: 12px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Find User Details</h1>
+    <form id="lookupForm">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="Enter user email" />
+
+      <label for="studentName">Student Name</label>
+      <input type="text" id="studentName" name="studentName" placeholder="Enter student name" />
+
+      <button type="submit">Lookup User</button>
+    </form>
+
+    <div id="result" style="margin-top: 20px;"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById("lookupForm");
+    const result = document.getElementById("result");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      result.textContent = "Loading...";
+
+      const email = document.getElementById("email").value.trim();
+      const studentName = document.getElementById("studentName").value.trim();
+
+      if (!email && !studentName) {
+        result.textContent = "Please enter an email or student name.";
+        return;
+      }
+
+      const response = await fetch("/api/users/find", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, studentName }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        result.textContent = data.message || "Error fetching user.";
+        return;
+      }
+
+      result.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+    });
+  </script>
+</body>
+</html>
