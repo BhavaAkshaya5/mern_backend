@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use("/api/users", require("./Routers/studentRoutes"));
+app.use("/api/users", require("./Routers/userRoutes"));
 // Add your other routes here
 
 mongoose.connect(process.env.MONGO_URI)
